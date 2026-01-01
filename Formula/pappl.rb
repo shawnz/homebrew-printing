@@ -14,6 +14,21 @@ class Pappl < Formula
 
   # Uses system CUPS on macOS (requires 2.2+, macOS has 2.3+)
 
+  # Use SF Symbol for menu bar icon instead of generic application icon
+  patch :p1, <<~DIFF
+    --- a/pappl/system-status-macos.m
+    +++ b/pappl/system-status-macos.m
+    @@ -121,7 +121,8 @@
+         [ui->mainMenu addItemWithTitle:[NSString stringWithFormat:@"About %@",ui->name] action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
+
+         // Set the image for the item...
+    -    NSImage *image              = [NSApp.applicationIconImage copy];
+    +    NSImage *image = [NSImage imageWithSystemSymbolName:@"printer.fill"
+    +                               accessibilityDescription:@"Printer"];
+         image.size                  = ui->statusItem.button.frame.size;
+         ui->statusItem.button.image = image;
+  DIFF
+
   def install
     system "./configure", *std_configure_args
     system "make"

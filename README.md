@@ -33,7 +33,7 @@ brew services start shawnz/printing/ghostscript-printer-app
 
 ## Adding Your Printer
 
-1. **Open the web interface**: Click the blue folder icon in your menu bar, or navigate to https://localhost:8501
+1. **Open the web interface**: Click the printer icon in your menu bar, or navigate to https://localhost:8501
 
 2. **Add your printer** in the ghostscript-printer-app web interface:
    - Click "Add Printer"
@@ -132,6 +132,10 @@ These aren't bugs per se, but prevent building on macOS and would benefit from u
 - **PATH injection for foomatic-rip**
 
   The `foomatic-rip` filter shells out to `gs` and driver binaries. We inject `/opt/homebrew/bin` into PATH via the service definition to ensure these are found.
+
+- **SF Symbol for menu bar icon** (pappl)
+
+  PAPPL uses `[NSApp.applicationIconImage copy]` for the menu bar icon, which shows a generic folder icon for command-line applications without a bundle. Packaging as a proper `.app` bundle would fix this but adds complexity (Info.plist, code signing, service definition changes). Instead, we patch PAPPL to use the SF Symbol `printer.fill`. If we add more printer apps to this repo in the future, we may want a more flexible solution (e.g., parameterizing the icon in PAPPL).
 
 - **Listening on localhost only**
 
